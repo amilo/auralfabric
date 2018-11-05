@@ -1,4 +1,5 @@
-Aural Fabric study version by Alessia Milo
+Aural Fabric study version. 
+author: Alessia Milo.
 
 This program logs the data captured by the sensing areas as integers (sensorLog.m).
 It also records a binary raw file (audio.bin) as sent to stereo audio out, ready for alignment and analysis in matlab.
