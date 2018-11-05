@@ -1,8 +1,8 @@
 # auralfabric
 
-repository for the aural fabric bela code. Extended version.
+Repository for the aural fabric bela code. Extended version.
 
-Download the project.
+Download or clone the git folder.
 
 Download the recordings at https://freesound.org/people/vertex_wave/packs/25301/
 
