@@ -1,9 +1,16 @@
 Aural Fabric source code: detects map interaction through MPR121 and plays back the recordings hosted on Bela.
-The code runs on Bela, an embedded platform for ultra-low latency audio and sensor processing.
-http://bela.io
+author: Alessia Milo.
 
 The Aural Fabric software is distributed under the GNU Lesser General Public License
 (LGPL 3.0), available here: https://www.gnu.org/licenses/lgpl-3.0.txt
+
+visit https://auralcharacter.wordpress.com/aural-fabric for further information.
+
+The code runs on Bela, an embedded platform for ultra-low latency audio and sensor processing.
+http://bela.io
+
+Thanks to Christian Heinrichs and Giulio Moro for technical consultancy with Bela.
+
 
 Bela is:
 
