@@ -13,3 +13,6 @@ Load the project folder in the BELA IDE.
 OPTION B)
 Load the project folder in the BELA IDE.
 Scp the recordings to BELA from terminal.
+
+Analysis tools in MATLAB here
+https://github.com/amilo/auralfabric-matlab
