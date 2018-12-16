@@ -1,8 +1,8 @@
 /*
- ____  _____ _        _    
-| __ )| ____| |      / \   
-|  _ \|  _| | |     / _ \  
-| |_) | |___| |___ / ___ \ 
+ ____  _____ _        _
+| __ )| ____| |      / \
+|  _ \|  _| | |     / _ \
+| |_) | |___| |___ / ___ \
 |____/|_____|_____/_/   \_\
 
 The platform for ultra-low latency audio and sensor processing
@@ -82,7 +82,7 @@ void readMPR121(void*)
 #ifdef DEBUG_MPR121
 	rt_printf("\n");
 #endif
-	
+
 	// You can use this to read binary on/off touch state more easily
 	//rt_printf("Touched: %x\n", mpr121.touched());
 }
@@ -96,7 +96,7 @@ int gStopThreads = 0;
 int gTaskStopped = 0;
 // int gCount = 0;
 static float fadeTime = 0.5; // Fade-in/out time in seconds
-static const char* filenames[] = { 
+static const char* filenames[] = {
                                   "A_0_C_Fountain.wav"                 // A_0
                                   ,"A_1_C_CharlesOutside.wav"                      // A_1
                                   ,"A_1_C_CharlesOutside.wav"                      // A_2  // use A_1 rec here
@@ -110,9 +110,9 @@ static const char* filenames[] = {
                                   ,"A_10_C_PaintedHallCourt_edit.wav"          // A_10
                                   ,"A_11_C_OutsidePaintedHallGreen.wav"          // A_11
                                   ,"B_0_C_MarketSouth.wav"          // B_0
-                                  ,"waves.wav"                       // B_1
-                                  ,"B_3_A_MarketShort.wav"          // B_2
-                                  ,"B_5_A_ExitMarket.wav"            // B_3
+                                  ,"waves.wav"                      // B_1
+                                  ,"B_2_A_TurnpinLaneG.wav"          // B_2
+                                  ,"B_3_A_MarketShort.wav"            // B_3
                                   ,"waves.wav"                       // B_4
                                   ,"B_5_A_ExitMarket.wav"            // B_5
                                   ,"B_6_C_CuttySark.wav"            // B_6
@@ -156,7 +156,7 @@ bool setup(BelaContext *context, void *userData)
     // sensorFile.setFooter("];\n");
     // sensorFile.setEcho(true);
     // sensorFile.setEchoInterval(100);
-    
+
     // MPR121
     for(int s=0;s<NUM_SENSORS;s++) {
         if(!mpr121[s].begin(1, mpr121Address[s])) {
@@ -168,19 +168,19 @@ bool setup(BelaContext *context, void *userData)
 	        sensorValue_prev[s][i] = 0;
 	    }
     }
-	
+
 	i2cTask = Bela_createAuxiliaryTask(readMPR121, 50, "bela-mpr121", NULL);
 	readIntervalSamples = context->audioSampleRate / readInterval;
-    
+
     // SAMPLES
     for(int i=0;i<NUM_STREAMS;i++) {
         sampleStream[i] = new SampleStream(filenames[i],NUM_CHANNELS,BUFFER_LEN);
     }
-    
+
     // Initialise sample buffer task
 	if((gFillBuffersTask = Bela_createAuxiliaryTask(&fillBuffers, 90, "fill-buffer", NULL)) == 0)
 		return false;
-	
+
 	return true;
 }
 
@@ -197,7 +197,7 @@ void render(BelaContext *context, void *userData)
 	}
     // check if buffers need filling
     Bela_scheduleAuxiliaryTask(gFillBuffersTask);
-    
+
     /* print values */
 	// const int logArraySize = NUM_SENSORS * NUM_TOUCH_PINS + 1;
  //   static float logArray[logArraySize];
@@ -213,20 +213,20 @@ void render(BelaContext *context, void *userData)
 	//     logArray[idx++] = context->audioFramesElapsed;
 	//     sensorFile.log(logArray, logArraySize);
  //   }
-    
-    
+
+
     for(int s=0;s<NUM_SENSORS;s++) {
         for(int i=0;i<NUM_TOUCH_PINS;i++) {
 
             if( s==1 && (i==1 || i==4 || i==7) ) {} // don't check these pins
             else {
                 if((sensorValue[s][i] && !(sensorValue_prev[s][i])) || (!sensorValue[s][i] && (sensorValue_prev[s][i])) ) {
-                    
+
                     if(s==1 && i==9) {
                         if(sensorValue[s][i])
                             doNotTrigger11 = 1;
                     }
-                    
+
                     if(doNotTrigger11 && s==1 && i==11)
                         sampleStream[i+s*NUM_TOUCH_PINS]->togglePlaybackWithFade(0.0f,fadeTime);
                     else {
@@ -255,7 +255,7 @@ void render(BelaContext *context, void *userData)
                             sampleStream[i+s*NUM_TOUCH_PINS]->togglePlaybackWithFade(sensorValue[s][i]?1.0f:0.0f,fadeTime);
                         }
                     }
-                    
+
                     /* // print on trigger
                     rt_printf("Value of sensor %d on board %d is %d previous was %d\n",i,s,sensorValue[s][i],sensorValue_prev[s][i]);
                     for(int s=0;s<NUM_SENSORS;s++) {
@@ -265,13 +265,13 @@ void render(BelaContext *context, void *userData)
                     }
                     rt_printf("\n");
                     */
-                    
+
                 }
                 sensorValue_prev[s][i] = sensorValue[s][i];
             }
         }
     }
-    
+
     // // ***** remove this -- it's just a demonstration
     // // random playback toggling
     // for(int s=0;s<NUM_SENSORS;s++) {
@@ -296,7 +296,7 @@ void render(BelaContext *context, void *userData)
     //     }
     // }
     // *****
-    
+
     for(unsigned int n = 0; n < context->audioFrames; n++) {
         for(int i=0;i<NUM_STREAMS;i++) {
             // process frames for each sampleStream objects (get samples per channel below)
@@ -304,7 +304,7 @@ void render(BelaContext *context, void *userData)
         }
         float outLog = 0;
     	for(unsigned int channel = 0; channel < context->audioOutChannels; channel++) {
-    	    
+
             float out = 0;
             for(int i=0;i<NUM_STREAMS;i++) {
                 // get samples for each channel from each sampleStream object
